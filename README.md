@@ -23,4 +23,4 @@ npx tailwindcss init -p
 
 Init :
 
-Run dev
+npm run dev
