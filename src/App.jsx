@@ -10,7 +10,14 @@ export default function App() {
   return (
     <div className="h-screen flex flex-col items-center justify-center p-10 gap-5">
       <h1>Hello</h1>
+      <p>djvf</p>
 
+      {isLoadingShow && <p>Loading...</p>}
+
+      {showError && <p>Error</p>}
+
+      {showData && <p>{showData.name}</p>}
+        
     </div>
   );
 }
