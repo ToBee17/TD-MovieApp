@@ -1,6 +1,6 @@
 
 
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import useFetch from './hook/useFetch';
 
 export default function App() {
@@ -8,16 +8,28 @@ export default function App() {
   console.log(showData);
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center p-10 gap-5">
-      <h1>Hello</h1>
-      <p>djvf</p>
+    <div className="h-screen flex  items-center justify-center p-10 gap-5">
+      <div src="https://api.tvmaze.com/the-queens-gambit/1/cast"></div>
+      <Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
 
-      {isLoadingShow && <p>Loading...</p>}
+<Avatar>
+  <AvatarImage src="https://api.tvmaze.com/the-queens-gambit/140140/cast" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
 
-      {showError && <p>Error</p>}
+<Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
 
-      {showData && <p>{showData.name}</p>}
-        
+<Avatar>
+  <AvatarImage src="https://github.com/shadcn.png" />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar>
+
     </div>
   );
 }
