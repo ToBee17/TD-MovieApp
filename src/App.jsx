@@ -17,9 +17,8 @@ export default function App() {
 
   return (
     <div className="h-screen flex flex-col items-center justify-center p-10 gap-5">
-      <h1>Hello</h1>
-      <p>Florian est le goat</p>
-
+      <h1>{showData.name}</h1>
+      <img src={showData.image.medium} alt={showData.name} />
     </div>
   );
 }
