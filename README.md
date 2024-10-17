@@ -13,6 +13,7 @@ https://ui.shadcn.com
 
 https://ui.jln.dev
 
+npx shadcn@latest add
 
 Tailwinds : 
 

@@ -1,5 +1,7 @@
 import useFetch from "./hook/useFetch";
 
+import {Button} from "./components/ui/button";
+
 export default function App() {
   const {
     data: showData,
@@ -23,6 +25,8 @@ export default function App() {
 
   return (
     <section className="h-screen flex flex-col items-center gap-5 font-medium bg-background text-white">
+
+      {/* Bannière */}
       <div
         className="h-[25%] w-full"
         style={{
@@ -81,7 +85,20 @@ export default function App() {
           className="w-full px-5 text-sm"
         ></p>
       </div>
-      
+
+      {/* Watch */}
+      <div className="flex flex-col gap-5 justify-center items-center">
+        <h2 className="text-xl px-5 uppercase text-span">Watch</h2>
+
+        <Button
+          variant="mobile"
+          size="mobile"
+          onClick={() => window.open(showData.officialSite, "_blank")}
+        >
+          Watch the trailer
+        </Button>
+      </div>
+
     </section>
   );
 }
