@@ -63,7 +63,7 @@ export default function App() {
               {showData.genres}
             </p>
             <p>
-              <span className="text-span">Épisodes ordered : </span>
+              <span className="text-span">Episodes ordered : </span>
               {showData.status}
             </p>
             <p>
