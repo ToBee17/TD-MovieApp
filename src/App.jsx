@@ -1,6 +1,7 @@
 import useFetch from "./hook/useFetch";
 
-import {Button} from "./components/ui/button";
+import { Button } from "./components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
 
 export default function App() {
   const {
@@ -25,10 +26,9 @@ export default function App() {
 
   return (
     <section className="h-screen flex flex-col items-center gap-5 font-medium bg-background text-white">
-
       {/* Bannière */}
       <div
-        className="h-[25%] w-full"
+        className="h-[25%] w-full bg-cover bg-center relative"
         style={{
           backgroundImage:
             showData2 && showData2[6]
@@ -37,7 +37,9 @@ export default function App() {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-      ></div>
+      >
+        <div className="absolute inset-0 top-2/3 bg-gradient-to-t from-background to-transparent"></div>
+      </div>
 
       {/* Infos Movie */}
       <div className="flex justify-between w-full px-5 py-2">
@@ -77,27 +79,47 @@ export default function App() {
         />
       </div>
 
-      {/* Description */}
-      <div className="flex flex-col gap-5 justify-center items-center">
-        <h2 className="text-xl px-5 uppercase text-span">Description</h2>
-        <p
-          dangerouslySetInnerHTML={{ __html: showData.summary }}
-          className="w-full px-5 text-sm"
-        ></p>
-      </div>
+      {/* Tabs */}
+      <Tabs defaultValue="infos" className="w-full px-5">
+        <TabsList className="w-full flex justify-around gap-1 mb-10">
+          <TabsTrigger value="infos" className="w-full">
+            Infos
+          </TabsTrigger>
+          <TabsTrigger value="episodes" className="w-full">
+            Épisodes
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Watch */}
-      <div className="flex flex-col gap-5 justify-center items-center">
-        <h2 className="text-xl px-5 uppercase text-span">Watch</h2>
+        {/* Section infos */}
+        <TabsContent value="infos" className="flex flex-col gap-5">
+          
+          {/* Description */}
+          <div className="flex flex-col gap-5 justify-center items-center">
+            <h2 className="text-xl px-5 uppercase text-span">Description</h2>
+            <p
+              dangerouslySetInnerHTML={{ __html: showData.summary }}
+              className="w-full text-sm text-span"
+            ></p>
+          </div>
 
-        <Button
-          variant="mobile"
-          size="mobile"
-          onClick={() => window.open(showData.officialSite, "_blank")}
-        >
-          Watch the trailer
-        </Button>
-      </div>
+          {/* Watch */}
+          <div className="flex flex-col gap-5 justify-center items-center">
+            <h2 className="text-xl px-5 uppercase text-span">Watch</h2>
+
+            <Button
+              variant="mobile"
+              size="mobile"
+              onClick={() => window.open(showData.officialSite, "_blank")}
+            >
+              Watch the trailer
+            </Button>
+          </div>
+        </TabsContent>
+
+
+        {/* Section épisodes */}
+        <TabsContent value="episodes">Change your password here.</TabsContent>
+      </Tabs>
 
     </section>
   );
