@@ -2,6 +2,7 @@ import useFetch from "./hook/useFetch";
 
 import { Button } from "./components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
+import { Select, SelectTrigger, SelectContent} from "./components/ui/select";
 
 export default function App() {
   const {
@@ -16,6 +17,15 @@ export default function App() {
   );
   console.log(showData2);
 
+  const { data: showData3 } = useFetch(
+    "https://api.tvmaze.com/shows/41428/seasons"
+  );
+  console.log(showData3);
+
+  const { data: showData4 } = useFetch(
+    "https://api.tvmaze.com/shows/41428/episodes"
+  );
+
   if (isLoadingShow) {
     return <div>Loading...</div>;
   }
@@ -25,10 +35,10 @@ export default function App() {
   }
 
   return (
-    <section className="h-screen flex flex-col items-center gap-5 font-medium bg-background text-white">
+    <section className="h-full flex flex-col items-center gap-5 font-medium bg-background text-white">
       {/* Bannière */}
       <div
-        className="h-[25%] w-full bg-cover bg-center relative"
+        className="aspect-[3/2] w-full bg-cover bg-center relative"
         style={{
           backgroundImage:
             showData2 && showData2[6]
@@ -80,13 +90,13 @@ export default function App() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="infos" className="w-full px-5">
+      <Tabs defaultValue="episodes" className="w-full px-5">
         <TabsList className="w-full flex justify-around gap-1 mb-10">
           <TabsTrigger value="infos" className="w-full">
             Infos
           </TabsTrigger>
           <TabsTrigger value="episodes" className="w-full">
-            Épisodes
+            Episodes
           </TabsTrigger>
         </TabsList>
 
@@ -118,7 +128,10 @@ export default function App() {
 
 
         {/* Section épisodes */}
-        <TabsContent value="episodes">Change your password here.</TabsContent>
+        <TabsContent value="episodes">
+          
+        </TabsContent>
+                  
       </Tabs>
 
     </section>
