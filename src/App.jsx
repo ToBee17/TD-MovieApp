@@ -23,18 +23,20 @@ export default function App() {
 
   return (
     <section className="h-screen flex flex-col items-center gap-5 font-medium bg-background text-white">
-      
       <div
         className="h-[25%] w-full"
         style={{
-          backgroundImage: `url(${showData2[6].resolutions.original.url})`,
+          backgroundImage:
+            showData2 && showData2[6]
+              ? `url(${showData2[6].resolutions.original.url})`
+              : "none",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       ></div>
 
       {/* Infos Movie */}
-      <div className="flex justify-between w-full px-5">
+      <div className="flex justify-between w-full px-5 py-2">
         <section className="flex flex-col gap-5">
           <h1 className="text-xl">{showData.name}</h1>
           <ul>
@@ -60,16 +62,26 @@ export default function App() {
             </p>
             <p>
               <span className="text-span">How to watch : </span>
-              {showData.webChannel.name}
+              {showData.webChannel ? showData.webChannel.name : "N/A"}
             </p>
           </ul>
         </section>
         <img
-          src={showData.image.medium}
+          src={showData.image ? showData.image.medium : ""}
           alt={showData.name}
           className="max-w-[40%] rounded-lg outline outline-[.5px] outline-white shadow-md shadow-white"
         />
       </div>
+
+      {/* Description */}
+      <div className="flex flex-col gap-5 justify-center items-center">
+        <h2 className="text-xl px-5 uppercase text-span">Description</h2>
+        <p
+          dangerouslySetInnerHTML={{ __html: showData.summary }}
+          className="w-full px-5 text-sm"
+        ></p>
+      </div>
+      
     </section>
   );
 }
