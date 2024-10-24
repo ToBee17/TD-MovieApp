@@ -3,21 +3,29 @@ import { useState } from "react";
 
 import { Button } from "./components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
-import { Select, SelectTrigger, SelectContent, SelectItem } from "./components/ui/select";
-import { Popover, PopoverTrigger, PopoverContent } from "./components/ui/popover";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+} from "./components/ui/select";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "./components/ui/popover";
 import { Avatar, AvatarImage } from "./components/ui/avatar";
-import { ScrollArea, ScrollBar} from "./components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "./components/ui/scroll-area";
 
 export default function App() {
-  const [selectedPersonId, setSelectedPersonId] = useState(null);
-
   const {
     data: showData,
     isLoading: isLoadingShow,
     error: showError,
   } = useFetch(
-    "https://api.tvmaze.com/shows/83?embed[]=images&embed[]=seasons&embed[]=episodes&embed[]=cast"
+    "https://api.tvmaze.com/shows/41428?embed[]=images&embed[]=seasons&embed[]=episodes&embed[]=cast"
   );
+  // 83
   console.log(showData);
 
   if (isLoadingShow) {
@@ -120,52 +128,62 @@ export default function App() {
             </Button>
           </div>
 
+          {/* Rating */}
+
+          
 
           {/* Cast */}
-          <div className="bg-BackgroundColor font-main">
-            <div>
-              <h1 className="pl-10 text-TextColor text-2xl font-bold">
-                Note de la communauté: {showData.rating.average}/10
-              </h1>
-            </div>
-            <div>
-              <h1 className="pl-10 pt-7 text-TextColor text-2xl font-bold">
-                Cast
-              </h1>
-            </div>
-
-            <ScrollArea className="h-25 w-full rounded-md mt-4">
-              <div className="flex w-full space-x-4 p-4">
-                {showData._embedded.cast &&
-                  showData._embedded.cast.map((castMember) => (
-                    <figure key={castMember.person.id} className="shrink-0">
-                      <div className="overflow-hidden rounded-md">
-                        <Popover>
-                          <PopoverTrigger
-                            className="flex items-center"
-                            onClick={() =>
-                              setSelectedPersonId(castMember.person.id)
+          <div className="flex flex-col gap-5 justify-center items-center">
+            <h2 className="text-xl px-5 uppercase text-span">Cast</h2>
+            <ScrollArea className="w-full h-64">
+              <div className="flex gap-4">
+                {showData._embedded.cast.map((castMember) => (
+                  <Popover key={castMember.person.id}>
+                    <PopoverTrigger asChild className="flex items-center">
+                      <div className="flex flex-col items-center cursor-pointer">
+                        <Avatar className="h-16 w-16">
+                          <AvatarImage
+                            className="size-16 object-cover"
+                            src={
+                              castMember.person.image
+                                ? castMember.person.image.medium
+                                : ""
                             }
-                          >
-                            <Avatar className="h-20 w-20">
-                              <AvatarImage
-                                src={castMember.person.image.medium}
-                                className="size-20 object-cover"
-                              />
-                            </Avatar>
-                          </PopoverTrigger>
-                          <PopoverContent>
-                            {selectedPersonId === castMember.person.id && (
-                              <PersonDetails
-                                personId={selectedPersonId}
-                                castMember={castMember}
-                              />
-                            )}
-                          </PopoverContent>
-                        </Popover>
+                            alt={castMember.person.name}
+                          />
+                        </Avatar>
                       </div>
-                    </figure>
-                  ))}
+                    </PopoverTrigger>
+                    <PopoverContent className="p-4">
+                      <div className="flex flex-col items-center p-4 bg-background font-main">
+                        <img
+                          src={castMember.person.image.medium}
+                          className="rounded-xl"
+                          alt={castMember.person.name}
+                        />
+                        <h2 className="text-lg font-bold text-white ">
+                          {castMember.person.name}
+                        </h2>
+                        <p className="text-span">
+                          <span className="font-bold">Date of Birth: </span>
+                          {castMember.person.birthday || "N/A"}
+                        </p>
+                        <p className="text-span">
+                          <span className="font-bold">Nationality: </span>
+                          {castMember.person.country ? castMember.person.country.name : "N/A"}
+                        </p>
+                        <p className="text-span">
+                          <span className="font-bold">Gender: </span>
+                          {castMember.person.gender || "N/A"}
+                        </p>
+                        <p className="text-span">
+                          <span className="font-bold">Character: </span>
+                          {castMember.character.name || "N/A"}
+                        </p>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                ))}
               </div>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
@@ -203,33 +221,3 @@ export default function App() {
     </section>
   );
 }
-
-// function PersonDetails({ personId, castMember }) {
-//   const {
-//     data: personData,
-//     isLoading: isLoadingPerson,
-//     error: personError,
-//   } = useFetchPerson(`https://api.tvmaze.com/people/${personId}`);
-
-//   if (isLoadingPerson) return <div>Chargement...</div>;
-//   if (personError) return <div>Erreur 404 {personError.message}</div>;
-
-//   return (
-//     <div className="flex flex-col items-center p-4 bg-background font-main">
-//       <img
-//         src={castMember.person.image.medium}
-//         className="rounded-xl"
-//         alt={castMember.person.name}
-//       />
-//       <h2 className="text-lg font-bold text-white ">
-//         {castMember.person.name}
-//       </h2>
-//       {personData && (
-//         <>
-//           <p className="text-white">{personData.birthday}</p>
-//           <p className="text-white">{personData.country.name}</p>
-//         </>
-//       )}
-//     </div>
-//   );
-// }
