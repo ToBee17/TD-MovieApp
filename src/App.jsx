@@ -35,8 +35,7 @@ export default function App() {
   return (
     <div className="bg-BackgroundColor font-main">
       <div>
-      <h1 className="pl-10 text-TextColor text-2xl font-bold">Note:</h1>
-      <p className="pl-10 text-TextColor text-2xl"> {seriesRating}/10</p>
+      <h1 className="pl-10 text-TextColor text-2xl font-bold">Note de la communauté: {seriesRating}/10</h1>
       </div>
       <div>
         <h1 className="pl-10 pt-7 text-TextColor text-2xl font-bold">Cast</h1>
