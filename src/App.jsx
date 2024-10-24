@@ -9,22 +9,23 @@ export default function App() {
     data: showData,
     isLoading: isLoadingShow,
     error: showError,
-  } = useFetch("https://api.tvmaze.com/shows/41428");
+  } = useFetch("https://api.tvmaze.com/shows/83?embed[]=images&embed[]=seasons&embed[]=episodes");
   console.log(showData);
 
-  const { data: showData2 } = useFetch(
-    "https://api.tvmaze.com/shows/41428/images"
-  );
-  console.log(showData2);
+  // const { data: showDataImage } = useFetch(
+  //   "https://api.tvmaze.com/shows/83/images"
+  // );
+  // console.log(showDataImage);
 
-  const { data: showData3 } = useFetch(
-    "https://api.tvmaze.com/shows/41428/seasons"
-  );
-  console.log(showData3);
+  // const { data: showDataSeason } = useFetch(
+  //   "https://api.tvmaze.com/shows/83/seasons"
+  // );
+  // console.log(showDataSeason);
 
-  const { data: showData4 } = useFetch(
-    "https://api.tvmaze.com/shows/41428/episodes"
-  );
+  // const { data: showDataEpisode } = useFetch(
+  //   "https://api.tvmaze.com/shows/83/episodes"
+  // );
+  // console.log(showDataEpisode);
 
   if (isLoadingShow) {
     return <div>Loading...</div>;
@@ -41,8 +42,8 @@ export default function App() {
         className="aspect-[3/2] w-full bg-cover bg-center relative"
         style={{
           backgroundImage:
-            showData2 && showData2[6]
-              ? `url(${showData2[6].resolutions.original.url})`
+          showData._embedded.images && showData._embedded.images[6]
+              ? `url(${showData._embedded.images[6].resolutions.original.url})`
               : "none",
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -90,7 +91,7 @@ export default function App() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="episodes" className="w-full px-5">
+      <Tabs defaultValue="episodes" className="w-full px-5 h-full">
         <TabsList className="w-full flex justify-around gap-1 mb-10">
           <TabsTrigger value="infos" className="w-full">
             Infos
@@ -129,7 +130,27 @@ export default function App() {
 
         {/* Section épisodes */}
         <TabsContent value="episodes">
-          
+          <div className="flex flex-col gap-5">
+            <Select>
+              <SelectTrigger className="w-full">Saison {showData._embedded.seasons.number}</SelectTrigger>
+              <SelectContent>
+                {showData._embedded.seasons.map((season) => (
+                  <option key={season.id} value={season.id}>
+                    {season.number} - {season.name} ({season.episodeOrder} episodes)
+                  </option>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="mt-5">
+              {showData._embedded.episodes.map((episode) => (
+                <div key={episode.id} className="mb-3">
+                  <h3 className="text-lg">{episode.name}</h3>
+                  <p>Season {episode.season}, Episode {episode.number}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </TabsContent>
                   
       </Tabs>
