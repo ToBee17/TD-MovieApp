@@ -1,106 +1,89 @@
-import { useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { useState, useEffect } from "react";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import useFetch from "./hook/useFetch";
-import useFetchPerson from './hook/useFetchPerson';
 
 export default function App() {
-  const [selectedPersonId, setSelectedPersonId] = useState(null);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [randomMovies, setRandomMovies] = useState([]);
 
-  const {
-    data: showData,
-    isLoading: isLoadingData,
-    error: showErrorData,
-  } = useFetch("https://api.tvmaze.com/shows/41428");
+  useEffect(() => {
+    const fetchRandomMovies = async () => {
+      try {
+        const response = await fetch(`https://api.tvmaze.com/shows`);
+        const data = await response.json();
+        // Shuffle the array and take the first 20 movies
+        const shuffled = data.sort(() => 0.5 - Math.random());
+        setRandomMovies(shuffled.slice(0, 20));
+      } catch (error) {
+        console.error("Erreur dans la randomisation:", error);
+      }
+    };
 
-  const {
-    data: showCast,
-    isLoading: isLoadingCast,
-    error: showError,
-  } = useFetch("https://api.tvmaze.com/shows/41428/cast");
+    fetchRandomMovies();
+  }, []);
 
-  console.log(showCast);
-  console.log(showData);
+  const handleSearch = async () => {
+    if (query.trim() === "") return;
+    try {
+      const response = await fetch(`https://api.tvmaze.com/search/shows?q=${query}`);
+      const data = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error("Erreur data:", error);
+    }
+  };
 
-  if (isLoadingCast) return <div>Chargement...</div>;
-  if (showError) return <div>Erreur 404 {showError?.message}</div>;
-
-  const seriesRating = showData?.rating?.average || 'N/A';
-
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
   return (
-    <div className="bg-BackgroundColor font-main">
-      <div>
-      <h1 className="pl-10 text-TextColor text-2xl font-bold">Note de la communauté: {seriesRating}/10</h1>
+    <div className="flex flex-col items-center justify-center h-full mt-2">
+      <div className="fixed top-0 left-0 right-0 flex justify-center w-full max-w-sm space-x-2 mb-4 -white p-4 shadow-md">
+        <Input
+          type="search"
+          placeholder="rechercher..."
+          className="bg-white"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyPress={handleKeyPress}
+        />
+        <Button type="button" className="bg-white" onClick={handleSearch}>
+          <img src="./magnifying-glass-solid.svg" alt="Search" className="w-4 h-4" />
+        </Button>
       </div>
-      <div>
-        <h1 className="pl-10 pt-7 text-TextColor text-2xl font-bold">Cast</h1>
+      <div className="w-full h-full max-w-md mt-20">
+        {results.length === 0 ? (
+          <div className=" p-2 text-white font-main h-50%">
+            <h2 className="text-lg font-bold mb-2">A ne pas manquer</h2>
+            <ScrollArea className="h-full w-full rounded-md mt-4" orientation="horizontal">
+              <div className="flex space-x-4">
+                {randomMovies.map((movie) => (
+                  <div key={movie.id} className="mb-2 rounded flex-shrink-0">
+                    <h3 className="text-lg font-bold text-white">{movie.name}</h3>
+                    {movie.image && (
+                      <img src={movie.image.medium} alt={movie.name} className="" />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
+        ) : (
+          results.map((result) => (
+            <div key={result.show.id} className="mb-2 p-2 text-white font-main rounded">
+              <h3 className="text-lg font-bold">{result.show.name}</h3>
+              {result.show.image && (
+                <img src={result.show.image.medium} alt={result.show.name} className="w-full h-auto" />
+              )}
+            </div>
+          ))
+        )}
       </div>
-
-      <ScrollArea className="h-25 w-full rounded-md mt-4">
-        <div className="flex w-full space-x-4 p-4">
-          {showCast &&
-            showCast.map((castMember) => (
-              <figure key={castMember.person.id} className="shrink-0">
-                <div className="overflow-hidden rounded-md">
-                  <Popover>
-                    <PopoverTrigger
-                      className="flex items-center"
-                      onClick={() => setSelectedPersonId(castMember.person.id)}
-                    >
-                      <Avatar className="h-20 w-20">
-                        <AvatarImage
-                          src={castMember.person.image.medium}
-                          className="size-20 object-cover"
-                        />
-                      </Avatar>
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      {selectedPersonId === castMember.person.id && (
-                        <PersonDetails personId={selectedPersonId} castMember={castMember} />
-                      )}
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </figure>
-            ))}
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-    </div>
-  );
-}
-
-function PersonDetails({ personId, castMember }) {
-  const {
-    data: personData,
-    isLoading: isLoadingPerson,
-    error: personError,
-  } = useFetchPerson(`https://api.tvmaze.com/people/${personId}`);
-
-  if (isLoadingPerson) return <div>Chargement...</div>;
-  if (personError) return <div>Erreur 404 {personError.message}</div>;
-
-  return (
-    <div className="flex flex-col items-center p-4 bg-background font-main">
-      <img
-        src={castMember.person.image.medium}
-        className="rounded-xl"
-        alt={castMember.person.name}
-      />
-      <h2 className="text-lg font-bold text-white ">
-        {castMember.person.name}
-      </h2>
-      {personData && (
-        <>
-          <p className="text-white">{personData.birthday}</p>
-          <p className="text-white">{personData.country.name}</p>
-        </>
-      )}
     </div>
   );
 }
