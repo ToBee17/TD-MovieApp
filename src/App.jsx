@@ -1,5 +1,4 @@
 import useFetch from "./hook/useFetch";
-import { useState } from "react";
 
 import { Button } from "./components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
@@ -94,7 +93,7 @@ export default function App() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="seasons" className="w-full px-5 h-full md:z-10">
+      <Tabs defaultValue="infos" className="w-full px-5 h-full md:z-10">
         <TabsList className="w-full flex justify-around gap-1 mb-10">
           <TabsTrigger value="infos" className="w-full">
             Infos
