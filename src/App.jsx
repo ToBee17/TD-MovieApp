@@ -23,9 +23,9 @@ export default function App() {
     isLoading: isLoadingShow,
     error: showError,
   } = useFetch(
-    "https://api.tvmaze.com/shows/15299?embed[]=images&embed[]=seasons&embed[]=episodes&embed[]=cast"
+    "https://api.tvmaze.com/shows/41428?embed[]=images&embed[]=seasons&embed[]=episodes&embed[]=cast"
   );
-  // 83 15299
+  // 83 15299 41428
   console.log(showData);
 
   if (isLoadingShow) {
@@ -54,8 +54,8 @@ export default function App() {
       </div>
 
       {/* Infos Movie */}
-      <div className="flex justify-between w-full px-5 py-2 md:relative md:z-10 md:mt-36 md:flex-row-reverse">
-        <section className="flex flex-col gap-5">
+      <div className="flex justify-between w-full px-5 py-2 md:relative md:z-10 md:mt-36 md:flex-row-reverse md:justify-end md:gap-5">
+        <section className="flex flex-col gap-5 md:justify-end">
           <h1 className="text-xl md:text-2xl">{showData.name}</h1>
           <ul className="md:text-lg">
             <p>
@@ -88,19 +88,19 @@ export default function App() {
           <img
             src={showData.image ? showData.image.medium : ""}
             alt={showData.name}
-            className="rounded-lg outline outline-[.5px] outline-white shadow-md shadow-white"
+            className="rounded-lg outline outline-[.5px] outline-white shadow-sm shadow-white"
           />
         </section>
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="infos" className="w-full px-5 h-full md:z-10">
+      <Tabs defaultValue="seasons" className="w-full px-5 h-full md:z-10">
         <TabsList className="w-full flex justify-around gap-1 mb-10">
           <TabsTrigger value="infos" className="w-full">
             Infos
           </TabsTrigger>
-          <TabsTrigger value="episodes" className="w-full">
-            Episodes
+          <TabsTrigger value="seasons" className="w-full">
+            Seasons
           </TabsTrigger>
         </TabsList>
 
@@ -128,6 +128,7 @@ export default function App() {
             </Button>
           </div>
 
+          {/* Rating */}
           <div className="flex flex-col gap-5 justify-center items-center">
             <h2 className="text-xl px-5 uppercase text-span">Rating</h2>
             <div className="flex gap-2">
@@ -213,8 +214,8 @@ export default function App() {
           </div>
         </TabsContent>
 
-        {/* Section épisodes */}
-        <TabsContent value="episodes">
+        {/* Section seasons */}
+        <TabsContent value="seasons">
           <div className="flex flex-col gap-5">
             <Select>
               <SelectTrigger className="w-full">Saison X</SelectTrigger>
@@ -230,7 +231,7 @@ export default function App() {
 
             <div className="mt-5">
               {showData._embedded.episodes.map((episode) => (
-                <div key={episode.id} className="mb-3">
+                <div key={episode.id} className="pl-2 mt-4 py-2 rounded-lg outline-white shadow-sm shadow-white">
                   <h3 className="text-lg">{episode.name}</h3>
                   <p>
                     Season {episode.season}, Episode {episode.number}
