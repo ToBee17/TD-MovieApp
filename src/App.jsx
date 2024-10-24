@@ -39,7 +39,7 @@ export default function App() {
     <section className="h-full flex flex-col items-center gap-5 font-medium bg-background text-white">
       {/* Bannière */}
       <div
-        className="aspect-[3/2] w-full bg-cover bg-center relative"
+        className="aspect-[3/2] md:aspect-[16/9] md:h-[50%] md:absolute md:z-0 w-full bg-cover bg-center relative"
         style={{
           backgroundImage:
           showData._embedded.images && showData._embedded.images[6]
@@ -49,11 +49,11 @@ export default function App() {
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 top-2/3 bg-gradient-to-t from-background to-transparent"></div>
+        <div className="absolute inset-0 top-2/3 md:inset-0 md:top-1/3 bg-gradient-to-t from-background to-transparent"></div>
       </div>
 
       {/* Infos Movie */}
-      <div className="flex justify-between w-full px-5 py-2">
+      <div className="flex justify-between w-full px-5 py-2 md:relative md:z-10 md:mt-48">
         <section className="flex flex-col gap-5">
           <h1 className="text-xl">{showData.name}</h1>
           <ul>
@@ -91,7 +91,7 @@ export default function App() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="episodes" className="w-full px-5 h-full">
+      <Tabs defaultValue="episodes" className="w-full px-5 h-full md:z-10">
         <TabsList className="w-full flex justify-around gap-1 mb-10">
           <TabsTrigger value="infos" className="w-full">
             Infos
