@@ -14,32 +14,38 @@ export default function App() {
 
   const {
     data: showData,
-    isLoading: isLoadingShow,
+    isLoading: isLoadingData,
+    error: showErrorData,
+  } = useFetch("https://api.tvmaze.com/shows/41428");
+
+  const {
+    data: showCast,
+    isLoading: isLoadingCast,
     error: showError,
   } = useFetch("https://api.tvmaze.com/shows/41428/cast");
 
-  const {
-    data: personData,
-    isLoading: isLoadingPerson,
-    error: personError,
-  } = useFetchPerson(selectedPersonId ? `https://api.tvmaze.com/people/${selectedPersonId}` : null);
-
+  console.log(showCast);
   console.log(showData);
-  console.log(personData);
 
-  if (isLoadingShow || (selectedPersonId && isLoadingPerson)) return <div>Chargement...</div>;
-  if (showError || personError) return <div>Erreur 404 {showError?.message || personError?.message}</div>;
+  if (isLoadingCast) return <div>Chargement...</div>;
+  if (showError) return <div>Erreur 404 {showError?.message}</div>;
+
+  const seriesRating = showData?.rating?.average || 'N/A';
 
   return (
     <div className="bg-BackgroundColor font-main">
       <div>
-        <h1 className="pl-10 text-TextColor text-2xl font-bold">Cast</h1>
+      <h1 className="pl-10 text-TextColor text-2xl font-bold">Note:</h1>
+      <p className="pl-10 text-TextColor text-2xl"> {seriesRating}/10</p>
+      </div>
+      <div>
+        <h1 className="pl-10 pt-7 text-TextColor text-2xl font-bold">Cast</h1>
       </div>
 
       <ScrollArea className="h-25 w-full rounded-md mt-4">
         <div className="flex w-full space-x-4 p-4">
-          {showData &&
-            showData.map((castMember) => (
+          {showCast &&
+            showCast.map((castMember) => (
               <figure key={castMember.person.id} className="shrink-0">
                 <div className="overflow-hidden rounded-md">
                   <Popover>
@@ -50,24 +56,14 @@ export default function App() {
                       <Avatar className="h-20 w-20">
                         <AvatarImage
                           src={castMember.person.image.medium}
-                          className="size-20"
+                          className="size-20 object-cover"
                         />
                       </Avatar>
-                      
                     </PopoverTrigger>
                     <PopoverContent>
-                      <div className="p-4">
-                        <h2 className="text-lg font-bold">{castMember.person.name}</h2>
-                        {personData && (
-                          <>
-                            <p>{personData.birthday}</p>
-                            <p>{personData.gender}</p>
-                            <p>{personData.country.name}</p>
-    
-                            {/* Ajoutez d'autres informations que vous souhaitez afficher */}
-                          </>
-                        )}
-                      </div>
+                      {selectedPersonId === castMember.person.id && (
+                        <PersonDetails personId={selectedPersonId} castMember={castMember} />
+                      )}
                     </PopoverContent>
                   </Popover>
                 </div>
@@ -76,6 +72,36 @@ export default function App() {
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+    </div>
+  );
+}
+
+function PersonDetails({ personId, castMember }) {
+  const {
+    data: personData,
+    isLoading: isLoadingPerson,
+    error: personError,
+  } = useFetchPerson(`https://api.tvmaze.com/people/${personId}`);
+
+  if (isLoadingPerson) return <div>Chargement...</div>;
+  if (personError) return <div>Erreur 404 {personError.message}</div>;
+
+  return (
+    <div className="flex flex-col items-center p-4 bg-background font-main">
+      <img
+        src={castMember.person.image.medium}
+        className="rounded-xl"
+        alt={castMember.person.name}
+      />
+      <h2 className="text-lg font-bold text-white ">
+        {castMember.person.name}
+      </h2>
+      {personData && (
+        <>
+          <p className="text-white">{personData.birthday}</p>
+          <p className="text-white">{personData.country.name}</p>
+        </>
+      )}
     </div>
   );
 }

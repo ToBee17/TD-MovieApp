@@ -13,9 +13,9 @@ export default {
 			main: ['Belanosima', 'sans-serif'],
 		},
   		colors: {
-			BackgroundColor: '#000C1F',
+			background: '#000C1F',
 		  	TextColor: '#FFFFFF',
-  			background: 'hsl(var(--background))',
+  			Backgroundjsp: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
