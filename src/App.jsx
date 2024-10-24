@@ -23,9 +23,9 @@ export default function App() {
     isLoading: isLoadingShow,
     error: showError,
   } = useFetch(
-    "https://api.tvmaze.com/shows/41428?embed[]=images&embed[]=seasons&embed[]=episodes&embed[]=cast"
+    "https://api.tvmaze.com/shows/15299?embed[]=images&embed[]=seasons&embed[]=episodes&embed[]=cast"
   );
-  // 83
+  // 83 15299
   console.log(showData);
 
   if (isLoadingShow) {
@@ -128,14 +128,35 @@ export default function App() {
             </Button>
           </div>
 
-          {/* Rating */}
-
-          
+          <div className="flex flex-col gap-5 justify-center items-center">
+            <h2 className="text-xl px-5 uppercase text-span">Rating</h2>
+            <div className="flex gap-2">
+              {[...Array(5)].map((_, index) => {
+                const rating = showData.rating.average / 2;
+                const isFull = index < Math.round(rating);
+                return (
+                  <svg
+                    key={index}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill={isFull ? "currentColor" : "white"}
+                    viewBox="0 0 32 32"
+                    className={`w-8 h-8 ${isFull ? "text-blue" : "text-white"}`}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l2.286 7.03a1 1 0 00.95.69h7.392c.969 0 1.371 1.24.588 1.81l-5.973 4.34a1 1 0 00-.364 1.118l2.286 7.03c.3.921-.755 1.688-1.54 1.118l-5.973-4.34a1 1 0 00-1.176 0l-5.973 4.34c-.784.57-1.838-.197-1.54-1.118l2.286-7.03a1 1 0 00-.364-1.118l-5.973-4.34c-.783-.57-.38-1.81.588-1.81h7.392a1 1 0 00.95-.69l2.286-7.03z"
+                    />
+                  </svg>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Cast */}
-          <div className="flex flex-col gap-5 justify-center items-center">
+          <div className="flex flex-col gap-5 justify-center items-center mb-10">
             <h2 className="text-xl px-5 uppercase text-span">Cast</h2>
-            <ScrollArea className="w-full h-64">
+            <ScrollArea className="w-full">
               <div className="flex gap-4">
                 {showData._embedded.cast.map((castMember) => (
                   <Popover key={castMember.person.id}>
@@ -170,7 +191,9 @@ export default function App() {
                         </p>
                         <p className="text-span">
                           <span className="font-bold">Nationality: </span>
-                          {castMember.person.country ? castMember.person.country.name : "N/A"}
+                          {castMember.person.country
+                            ? castMember.person.country.name
+                            : "N/A"}
                         </p>
                         <p className="text-span">
                           <span className="font-bold">Gender: </span>
