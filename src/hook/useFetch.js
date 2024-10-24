@@ -27,7 +27,7 @@ const useFetch = (url) => {
     fetchData();
   }, [url]);
 
-  return { data, isLoading, error };
+  return { data, isLoading, error, selectedSeason: 1 };
 };
 
 export default useFetch;

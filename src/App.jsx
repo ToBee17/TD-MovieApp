@@ -2,7 +2,7 @@ import useFetch from "./hook/useFetch";
 
 import { Button } from "./components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
-import { Select, SelectTrigger, SelectContent} from "./components/ui/select";
+import { Select, SelectTrigger, SelectContent, SelectItem} from "./components/ui/select";
 
 export default function App() {
   const {
@@ -132,12 +132,12 @@ export default function App() {
         <TabsContent value="episodes">
           <div className="flex flex-col gap-5">
             <Select>
-              <SelectTrigger className="w-full">Saison {showData._embedded.seasons.number}</SelectTrigger>
+              <SelectTrigger className="w-full">Saison X</SelectTrigger>
               <SelectContent>
                 {showData._embedded.seasons.map((season) => (
-                  <option key={season.id} value={season.id}>
+                  <SelectItem key={season.id} value={season.id}>
                     {season.number} - {season.name} ({season.episodeOrder} episodes)
-                  </option>
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
