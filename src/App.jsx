@@ -2,14 +2,21 @@ import useFetch from "./hook/useFetch";
 
 import { Button } from "./components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs";
-import { Select, SelectTrigger, SelectContent, SelectItem} from "./components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+} from "./components/ui/select";
 
 export default function App() {
   const {
     data: showData,
     isLoading: isLoadingShow,
     error: showError,
-  } = useFetch("https://api.tvmaze.com/shows/83?embed[]=images&embed[]=seasons&embed[]=episodes");
+  } = useFetch(
+    "https://api.tvmaze.com/shows/83?embed[]=images&embed[]=seasons&embed[]=episodes"
+  );
   console.log(showData);
 
   // const { data: showDataImage } = useFetch(
@@ -42,7 +49,7 @@ export default function App() {
         className="aspect-[3/2] md:aspect-[16/9] md:h-[50%] md:absolute md:z-0 w-full bg-cover bg-center relative"
         style={{
           backgroundImage:
-          showData._embedded.images && showData._embedded.images[6]
+            showData._embedded.images && showData._embedded.images[6]
               ? `url(${showData._embedded.images[6].resolutions.original.url})`
               : "none",
           backgroundSize: "cover",
@@ -53,10 +60,10 @@ export default function App() {
       </div>
 
       {/* Infos Movie */}
-      <div className="flex justify-between w-full px-5 py-2 md:relative md:z-10 md:mt-48">
+      <div className="flex justify-between w-full px-5 py-2 md:relative md:z-10 md:mt-36 md:flex-row-reverse">
         <section className="flex flex-col gap-5">
-          <h1 className="text-xl">{showData.name}</h1>
-          <ul>
+          <h1 className="text-xl md:text-2xl">{showData.name}</h1>
+          <ul className="md:text-lg">
             <p>
               <span className="text-span">Average Runtime : </span>
               {showData.averageRuntime}min
@@ -83,11 +90,13 @@ export default function App() {
             </p>
           </ul>
         </section>
-        <img
-          src={showData.image ? showData.image.medium : ""}
-          alt={showData.name}
-          className="max-w-[40%] rounded-lg outline outline-[.5px] outline-white shadow-md shadow-white"
-        />
+        <section className="h-full max-w-[40%] flex justify-end">
+          <img
+            src={showData.image ? showData.image.medium : ""}
+            alt={showData.name}
+            className="rounded-lg outline outline-[.5px] outline-white shadow-md shadow-white"
+          />
+        </section>
       </div>
 
       {/* Tabs */}
@@ -103,7 +112,6 @@ export default function App() {
 
         {/* Section infos */}
         <TabsContent value="infos" className="flex flex-col gap-5">
-          
           {/* Description */}
           <div className="flex flex-col gap-5 justify-center items-center">
             <h2 className="text-xl px-5 uppercase text-span">Description</h2>
@@ -127,7 +135,6 @@ export default function App() {
           </div>
         </TabsContent>
 
-
         {/* Section épisodes */}
         <TabsContent value="episodes">
           <div className="flex flex-col gap-5">
@@ -136,7 +143,8 @@ export default function App() {
               <SelectContent>
                 {showData._embedded.seasons.map((season) => (
                   <SelectItem key={season.id} value={season.id}>
-                    {season.number} - {season.name} ({season.episodeOrder} episodes)
+                    {season.number} - {season.name} ({season.episodeOrder}{" "}
+                    episodes)
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -146,15 +154,15 @@ export default function App() {
               {showData._embedded.episodes.map((episode) => (
                 <div key={episode.id} className="mb-3">
                   <h3 className="text-lg">{episode.name}</h3>
-                  <p>Season {episode.season}, Episode {episode.number}</p>
+                  <p>
+                    Season {episode.season}, Episode {episode.number}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         </TabsContent>
-                  
       </Tabs>
-
     </section>
   );
 }
